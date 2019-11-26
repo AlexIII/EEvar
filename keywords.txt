@@ -1,0 +1,8 @@
+# Datatypes (KEYWORD1)
+EEstore		KEYWORD1
+EEvar		KEYWORD1
+EEstring	KEYWORD1
+
+# Methods and Functions (KEYWORD2)
+save		KEYWORD2
+load		KEYWORD2
