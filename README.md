@@ -1,8 +1,8 @@
 # EEvar - EEPROM Arduino library
 
-Simple and lightweight for Arduino that allows you to save your variables in EEPROM memory. 
+Simple and lightweight library for Arduino that allows you to save your variables in EEPROM memory. 
 
-No need to keep track of addresses, offsets, and sizes of data you wand to store in EEPROM. After saving your variable to EEPROM its value gets restored after power failure or CPU reset.
+No need to keep track of addresses, offsets, and sizes of data that you want to store in EEPROM. After saving your variable to EEPROM its value gets restored after power failure or CPU reset.
 
 Works with any POD (`bool`, `int`, `float`, custom structs, etc.) and `String`. 
 
@@ -10,7 +10,7 @@ Works with any POD (`bool`, `int`, `float`, custom structs, etc.) and `String`.
 
 ### Example
 
-#### Simple types and String
+#### Simple types and `String`
 
 ```c++
 #include "EEvar.h"
