@@ -1,4 +1,4 @@
-# EEvar - EEROM Arduino library
+# EEvar - EEPROM Arduino library
 
 Simple and lightweight for Arduino that allows you to save your variables in EEPROM memory. 
 
