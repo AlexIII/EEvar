@@ -6,7 +6,7 @@
  */
 
 /*
- * There's three types available in the library: EEstore<T>, EEstring<MaxLen>, EEvar<T>. 
+ * There's three types available in the library: EEstore<T>, EEstring, EEvar<T>. 
  * What to choose:
  * 
  * EEstore<T> - does not create buffer of your type T. Use for:
@@ -20,9 +20,10 @@
  *    b = -18;
  *    eeVal << b;                   //write
  *    
- * EEstring<MaxLen> - use for storing String type. Does not buffer your string. Preserves string length, but no more than MaxLen.
+ * EEstring - use for storing String type. Does not buffer your string. 
+ * Preserves string length, but no more than maxLen (first constructor argument).
  * Example:
- *    static const EEstring<20> eeVal("hello");  //create and init
+ *    static const EEstring eeVal(20, "hello");  //create and init. Max 20 chars.
  *    String a = eeVal.get();       //read
  *    String b;
  *    eeVal >> b;                   //read
@@ -45,9 +46,9 @@
  *    config.save();          //save changes in config
  *    
  * Important notes: 
- *    - All EEstore<T>, EEstring<MaxLen>, EEvar<T> must be global or static.
+ *    - All EEstore<T>, EEstring, EEvar<T> must be global or static.
  *    - Changing order of created EEPROM variables or adding new ones not at the end will corrupt the saved data.
- *    - Type T can only be POD. E.g. T cannot be String and cannot have String as its member. Use EEstring<MaxLen> for storing a String.
+ *    - Type T can only be POD. E.g. T cannot be String and cannot have String as its member. Use EEstring for storing a String.
  */
 
 
@@ -57,7 +58,7 @@ const EEstore<float> eeFloat(25.8);       //allocate EEPROM for storing float an
 
 const EEstore<int> eeInt(-3685);          //for storing int
 
-const EEstring<20> eeString("initial");   //for storing String (20 chars max)
+const EEstring eeString(20, "initial");   //for storing String (20 chars max)
 
 void setup() {
   Serial.begin(115200);

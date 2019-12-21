@@ -15,11 +15,12 @@ Works with any POD (`bool`, `int`, `float`, custom structs, etc.) and `String`.
 ```c++
 #include "EEvar.h"
 
-const EEstore<float> eeFloat(25.8);       //allocate EEPROM for storing float and save value 25.8 to it on the first start
+const EEstore<float> eeFloat(25.8);       //allocate EEPROM for storing float 
+                                          //and save value 25.8 to it on the first start
 
 const EEstore<int> eeInt(-3685);          //for storing int
 
-const EEstring<20> eeString("initial");   //for storing String (20 chars max)
+const EEstring eeString(20, "initial");   //for storing String (20 chars max)
 
 void setup() {
   Serial.begin(115200);
@@ -104,9 +105,9 @@ void loop() {
 
 ### Important notes
 
-- All `EEstore<T>`, `EEstring<MaxLen>`, `EEvar<T>` must be global or static (or in another way ensure a stable order of instantiations).
+- All `EEstore<T>`, `EEstring`, `EEvar<T>` must be global or static (or in another way ensure a stable order of instantiations).
 - Changing order of created EEPROM variables or adding new ones not at the end will corrupt the saved data.
-- Type `T` can only be POD (`bool`, `int`, `float`, custom structs, etc.). `T` cannot be `String` and cannot have `String` as its member. Use `EEstring<MaxLen>` for storing a `String`.
+- Type `T` can only be POD (`bool`, `int`, `float`, custom structs, etc.). `T` cannot be `String` and cannot have `String` as its member. Use `EEstring` for storing a `String`.
 
 
 
@@ -120,13 +121,13 @@ There's three types available in the library:
 -  `EEvar<T>` - creates buffer of your type `T`. Use for:
   - values that you read frequently;
   - complex structures.
--  `EEstring<MaxLen>` - use for storing `String` type. Does not buffer your string. Preserves string length, but no more than MaxLen.
+-  `EEstring` - use for storing `String` type. Does not buffer your string. Preserves string length, but no more than maxLen (first constructor argument).
 
 Comparison table:
 
-|                                     | `EEstore<T>` | `EEvar<T>`    | `EEstring<MaxLen>`         |
+|                                     | `EEstore<T>` | `EEvar<T>`    | `EEstring`         |
 | ----------------------------------- | ------------ | ------------- | -------------------------- |
-| Can store                           | POD          | POD           | String of length <= MaxLen |
+| Can store                           | POD          | POD           | String of length <= maxLen |
 | Buffered                            | no           | yes           | no                         |
 | Easy struct-field access (via `->`) | no           | yes           | -                          |
 | Size, bytes                         | 2            | 2 + sizeof(T) | 2                          |
@@ -152,10 +153,8 @@ class EEstore {
   const T get() const;                            //read from EEPROM
 };
 
-template<unsigned int MaxLen>
 class EEstring {
-  EEstring();
-  EEstring(const char* initial);
+  EEstring(const uint16_t maxLen, const char* initial = "");
   const EEstring& operator<<(const char* val) const;      //save char string to EEPROM
   const EEstring& operator<<(const String& val) const;    //save String to EEPROM
   const EEstring& operator>>(String& val) const;          //load to String val from EEPROM

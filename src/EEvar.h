@@ -32,9 +32,9 @@ public:
   }
 };
 
-template<unsigned int MaxLen>
 class EEstring {
   const void* eeAddr;
+  const uint16_t maxLen;
   class LString : public String {
   public:  
     bool setSize(unsigned int size) {
@@ -48,21 +48,20 @@ class EEstring {
     }
   };
 public:
-  EEstring() : EEstring("") {}
-  EEstring(const char* initial) : eeAddr(EEPROMallocator::alloc(MaxLen)) { 
+  EEstring(const uint16_t maxLen, const char* initial = "") : eeAddr(EEPROMallocator::alloc(maxLen)), maxLen(maxLen) { 
     if(EEPROMallocator::isFirstStart()) *this << initial; 
   }
   const EEstring& operator<<(const char* val) const {
     const auto len = strlen(val)+1;
-    eeprom_update_block((const uint8_t*)val, (void*)eeAddr, len > MaxLen? MaxLen : len);
+    eeprom_update_block((const uint8_t*)val, (void*)eeAddr, len > maxLen? maxLen : len);
     return *this;
   }   
   const EEstring& operator<<(const String& val) const {
     return *this << val.c_str();
   }
   const EEstring& operator>>(String& val) const {
-    if(!static_cast<LString*>(&val)->setSize(MaxLen)) return *this;
-    eeprom_read_block((uint8_t*)val.c_str(), (void*)eeAddr, MaxLen);
+    if(!static_cast<LString*>(&val)->setSize(maxLen)) return *this;
+    eeprom_read_block((uint8_t*)val.c_str(), (void*)eeAddr, maxLen);
     static_cast<LString*>(&val)->setLen(strlen(val.c_str()));
     return *this;
   }
