@@ -118,7 +118,7 @@ There's three types available in the library:
 - `EEstore<T>` - does not create buffer of your type `T`. Use for:
   - simple types like `bool`, `int`, `float`;
   - large structures, that you don't need to have in the RAM all the time.
--  `EEvar<T>` - creates buffer of your type `T`. Use for:
+- `EEvar<T>` - creates buffer of your type `T`. Use for:
   - values that you read frequently;
   - complex structures.
 -  `EEstring` - use for storing `String` type. Does not buffer your string. Preserves string length, but no more than maxLen (first constructor argument).
@@ -130,11 +130,11 @@ Comparison table:
 | Can store                           | POD          | POD           | String of length <= maxLen |
 | Buffered                            | no           | yes           | no                         |
 | Easy struct-field access (via `->`) | no           | yes           | -                          |
-| Size, bytes                         | 2            | 2 + sizeof(T) | 2                          |
+| Size in RAM, bytes                  | 2            | 2 + sizeof(T) | 2                          |
 
 
 
-All available classes and methods:
+All available classes and their methods:
 
 ```c++
 class EEPROMallocator {
