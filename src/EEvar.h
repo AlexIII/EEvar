@@ -14,21 +14,38 @@
 template<typename T>
 class EEstore {
   const void* eeAddr;
+  T m_errVal;
+  static const int CHSUM_LEN=1;
+  static const int BL_LEN=sizeof(T)+CHSUM_LEN;
+  static const int CHSUM_IND=BL_LEN-1;
+  uint8_t compCheckSum(const uint8_t * buf){
+    uint8_t sum=0;
+    for(int i=0;i<sizeof(T);i++)
+      sum+=buf[i];
+    return sum;  
+  }
 public:
-  EEstore() : eeAddr(EEPROMallocator::alloc(sizeof(T))) {}
+  EEstore() : eeAddr(EEPROMallocator::alloc(BL_LEN)),m_errVal(0) {}
   EEstore(const T& initial) : EEstore() { if(EEPROMallocator::isFirstStart()) *this << initial; }
+  EEstore(const T& initial, const T& errVal) : EEstore(){m_errVal=errVal; if(EEPROMallocator::isFirstStart()) *this << initial; }
   const EEstore& operator<<(const T& val) const {
-    eeprom_update_block((const uint8_t*)&val, (void*)eeAddr, sizeof(T));
+    uint8_t buf[BL_LEN];
+    memcpy(buf,(const uint8_t*)&val,sizeof(T));
+    buf[CHSUM_IND]=compCheckSum(buf);
+    eeprom_update_block(buf, (void*)eeAddr, BL_LEN);
     return *this;
   }
   const EEstore& operator>>(T& val) const {
-    eeprom_read_block((uint8_t*)&val, (void*)eeAddr, sizeof(T));
+    val=get();      
     return *this;
   }
   const T get() const {
-    uint8_t buff[sizeof(T)];
-    eeprom_read_block(buff, (void*)eeAddr, sizeof(T));
-    return *((T*)buff);
+    uint8_t buf[BL_LEN];
+    eeprom_read_block(buf, (void*)eeAddr, BL_LEN);
+    if(buf[CHSUM_IND]==compCheckSum(buf))
+      return *((T*)buf);
+
+    return m_errVal;   
   }
 };
 
