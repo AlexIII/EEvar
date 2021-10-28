@@ -75,14 +75,14 @@ void setup() {
   eeStruct << conf;     //save conf to EEPROM
 
   //with buffering
-  Serial.println();
   Serial.print(configVar->isOn);
   Serial.print(" ");
   Serial.println(configVar->str);
   configVar->isOn = true;     //modify configVar
-  strncpy(configVar->str, "hello", sizeof(Config::str));
+  strncpy(configVar->str, "world", sizeof(Config::str));
   configVar.save();         //save configVar to EEPROM
-  
+
+  Serial.println();
 }
 
 void loop() {

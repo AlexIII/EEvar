@@ -18,16 +18,16 @@ public:
   EEstore() : eeAddr(EEPROMallocator::alloc(sizeof(T))) {}
   EEstore(const T& initial) : EEstore() { if(EEPROMallocator::isFirstStart()) *this << initial; }
   const EEstore& operator<<(const T& val) const {
-    eeprom_update_block((const uint8_t*)&val, (void*)eeAddr, sizeof(T));
+    if(eeAddr) eeprom_update_block((const uint8_t*)&val, (void*)eeAddr, sizeof(T));
     return *this;
   }
   const EEstore& operator>>(T& val) const {
-    eeprom_read_block((uint8_t*)&val, (void*)eeAddr, sizeof(T));
+    if(eeAddr) eeprom_read_block((uint8_t*)&val, (void*)eeAddr, sizeof(T));
     return *this;
   }
   const T get() const {
     uint8_t buff[sizeof(T)];
-    eeprom_read_block(buff, (void*)eeAddr, sizeof(T));
+    if(eeAddr) eeprom_read_block(buff, (void*)eeAddr, sizeof(T));
     return *((T*)buff);
   }
 };
@@ -53,7 +53,7 @@ public:
   }
   const EEstring& operator<<(const char* val) const {
     const auto len = strlen(val)+1;
-    eeprom_update_block((const uint8_t*)val, (void*)eeAddr, len > maxLen? maxLen : len);
+    if(eeAddr) eeprom_update_block((const uint8_t*)val, (void*)eeAddr, len > maxLen? maxLen : len);
     return *this;
   }   
   const EEstring& operator<<(const String& val) const {
@@ -61,7 +61,7 @@ public:
   }
   const EEstring& operator>>(String& val) const {
     if(!static_cast<LString*>(&val)->setSize(maxLen)) return *this;
-    eeprom_read_block((uint8_t*)val.c_str(), (void*)eeAddr, maxLen);
+    if(eeAddr) eeprom_read_block((uint8_t*)val.c_str(), (void*)eeAddr, maxLen);
     static_cast<LString*>(&val)->setLen(strlen(val.c_str()));
     return *this;
   }

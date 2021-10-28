@@ -15,42 +15,44 @@
 
 class EEPROMallocator {
   EEPROMallocator();
-  static uint16_t& addrCnt() {
-    static uint16_t cur = 0;
+  static unsigned int& addrCnt() {
+    static unsigned int cur = 2; // Reserve first two bytes for the first start test value
     return cur;
   }
 public:
-  static void* alloc(const uint16_t sz) {
-    uint16_t &cur = addrCnt();
-    const uint16_t t = cur;
+  static void* alloc(const unsigned int sz) {
+    unsigned int &cur = addrCnt();
+    const unsigned int start = cur;
     cur += sz;
-    return (void*)t;
+    if(cur > EEPROM.length()) return NULL;
+    return (void*)start;
   }
 
-  static uint16_t busy() {
+  static unsigned int busy() {
     return addrCnt();
   }
   
-  static uint16_t free() {
+  static unsigned int free() {
     return addrCnt() >= EEPROM.length()? 0 : EEPROM.length() - addrCnt();
   }
   
   static bool isFirstStart() {
     static bool checked = false;
-    static bool result = false;
-    if(checked) return result;
+    static bool firstStart = true;
+    if(checked) return firstStart;
+    checked = true;
 
-    void* addr = alloc(2);
     uint16_t val;
-    eeprom_read_block((uint8_t*)&val, addr, sizeof(val));
-    if(val != EE_TEST_VAL) {
-      val = EE_TEST_VAL;
-      eeprom_write_block((uint8_t*)&val, addr, sizeof(val));
-      result = true;
+    if(EEPROM.length() >= sizeof(val)) {
+      eeprom_read_block((uint8_t*)&val, (void*)0, sizeof(val));
+      firstStart = val != EE_TEST_VAL;
+      if(firstStart) {
+        val = EE_TEST_VAL;
+        eeprom_write_block((uint8_t*)&val, (void*)0, sizeof(val));
+      }
     }
 
-    checked = true;
-    return result;
+    return firstStart;
   }
 };
 
