@@ -108,8 +108,8 @@ void loop() {
 - All `EEstore<T>`, `EEstring`, `EEvar<T>` must be global or static (or in another way ensure a stable order of instantiations).
 - Changing order of created EEPROM variables or adding new ones not at the end will corrupt the saved data.
 - Type `T` can only be POD (`bool`, `int`, `float`, custom structs, etc.). `T` cannot be `String` and cannot have `String` as its member. Use `EEstring` for storing a `String`.
-
-
+- On ESP8266 the library will allocate 512 additional bytes for the flash page buffer. Using `EEvar<T>` will actually store your data __twice__ in the RAM.
+- Don't forget about EEPROM/FLASH wear-out! This library does NOT mitigate this problem.
 
 ### API
 
@@ -175,9 +175,10 @@ class EEvar {
 
 
 
-## Architecture
+## Supported architectures
 
-AVR-based Arduino: Uno, Nano, Mini Pro, 2560, etc.
+- AVR-based Arduino: Uno, Nano, Mini Pro, 2560, etc.
+- ESP8266
 
 ## License
 

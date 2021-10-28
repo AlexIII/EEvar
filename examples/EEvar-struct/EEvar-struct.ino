@@ -63,6 +63,7 @@ EEvar<Config> configVar((Config())); //store with buffering
 
 void setup() {
   Serial.begin(115200);
+  Serial.println();
 
   //without buffering
   Config conf;
@@ -82,7 +83,6 @@ void setup() {
   strncpy(configVar->str, "world", sizeof(Config::str));
   configVar.save();         //save configVar to EEPROM
 
-  Serial.println();
 }
 
 void loop() {

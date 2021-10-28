@@ -62,6 +62,7 @@ const EEstring eeString(20, "initial");   //for storing String (20 chars max)
 
 void setup() {
   Serial.begin(115200);
+  Serial.println();
 
   //check if it's CPU first start
   Serial.println(
