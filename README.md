@@ -1,8 +1,9 @@
 # EEvar - EEPROM Arduino library
 
-Simple and lightweight library for Arduino that allows you to save your variables in EEPROM memory. 
+Simple and lightweight Arduino library that allows you to save variables in the EEPROM memory. 
 
-No need to keep track of addresses, offsets, and sizes of data that you want to store in EEPROM. After saving your variable to EEPROM its value gets restored after power failure or CPU reset.
+No need to keep track of the address, offset or size of the data you want to store in the EEPROM.
+After saving the variable to the EEPROM its value gets restored on the power-up or CPU reset.
 
 Works with any POD (`bool`, `int`, `float`, custom structs, etc.) and `String`. 
 
@@ -100,6 +101,21 @@ void loop() {
 }
 
 ```
+
+#### Simulate first start
+
+If you want to reset all the saved variables in the EEPROM to their default values
+on the next CPU reset (right after you flash the sketch), 
+re-define `EE_TEST_VAL` to some different value __before__ including the library.
+
+```c++
+#define EE_TEST_VAL 0x315A    // library default is 0x3159
+#include "EEvar.h"
+
+```
+
+Try to choose "more random" values, never use something like `0xFFFF`, `0`, `1`, etc. or the first start detection may fail.
+`EEPROMallocator::isFirstStart()` will also return `true` after `EE_TEST_VAL` is re-defined.
 
 
 
