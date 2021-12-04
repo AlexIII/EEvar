@@ -63,12 +63,12 @@ public:
 protected:
   EEPROMallocator() {}
 
-#if defined(__AVR__)
+#if defined(__AVR__) || defined(ARDUINO_ARCH_AVR)
 
   static void read_block(void *__dst, const void *__src, size_t __n) { eeprom_read_block(__dst, __src, __n); }
   static void update_block(const void *__src, void *__dst, size_t __n) { eeprom_update_block(__src, __dst, __n); }
 
-#elif defined(ESP8266)
+#elif defined(ESP8266) || defined(ARDUINO_ARCH_ESP8266)
 
   static void read_block(void *__dst, const void *__src, size_t __n) {
     uint8_t* data = (uint8_t*)__dst;
@@ -81,6 +81,10 @@ protected:
     while(__n--) EEPROM.write(addr++, *data++);
     EEPROM.commit();
   }
+
+#else
+
+#error "******     EEvar library does not yet support this platform. Supported platforms: AVR, ESP8266     ******"
 
 #endif
 
