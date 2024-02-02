@@ -68,6 +68,11 @@ protected:
   static void read_block(void *__dst, const void *__src, size_t __n) { eeprom_read_block(__dst, __src, __n); }
   static void update_block(const void *__src, void *__dst, size_t __n) { eeprom_update_block(__src, __dst, __n); }
 
+#elif defined(__IMXRT1062__)
+
+  static void read_block(void *__dst, const void *__src, size_t __n) { eeprom_read_block(__dst, __src, __n); }
+  static void update_block(const void *__src, void *__dst, size_t __n) { eeprom_write_block(__src, __dst, __n); }
+
 #elif defined(ESP8266) || defined(ARDUINO_ARCH_ESP8266)
 
   static void read_block(void *__dst, const void *__src, size_t __n) {
