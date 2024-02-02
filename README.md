@@ -195,6 +195,7 @@ class EEvar {
 
 - AVR-based Arduino: Uno, Nano, Mini Pro, 2560, etc.
 - ESP8266
+- Teensy 4.x
 
 ## License
 
